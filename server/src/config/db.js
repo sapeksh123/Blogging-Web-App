@@ -8,7 +8,7 @@ const db = async () => {
             useNewUrlParser: true,
             useunifiedTopoLogy: true,
         })
-        console.log("DB Connected Successfully ");
+        console.log("DB Connected Successfully ❤️ ");
     }
     catch (error) {
         console.error("DB Connection Failed", error);

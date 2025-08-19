@@ -1,59 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import logo from "../assets/logoo.png";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
-  const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Add Blogs", path: "/blogs" },
-    { name: "Login", path: "/login" },
-  ];
+  // Load user from localStorage on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) setUser(JSON.parse(storedUser));
+  }, []);
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50 dark:bg-gray-900">
+    <nav className="bg-slate-700 shadow-md sticky top-0 z-50 ">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-bold text-blue-600 dark:text-cyan-400">
-          Bloggify
-        </Link>
+        {/* Logo */}
+      <Link to="/" className="flex items-center">
+  <img
+    src={logo}
+    alt="Logo"
+    className="h-10 w-auto filter brightness-110 drop-shadow-lg"
+  />
+</Link>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex space-x-6">
-          {navLinks.map((link) => (
+        {/* Profile/Login */}
+        <div className="flex items-center space-x-6">
+          {!user ? (
             <Link
-              key={link.name}
-              to={link.path}
-              className="text-gray-700 hover:text-blue-500 dark:text-gray-200 dark:hover:text-cyan-400"
+              to="/login"
+              className="text-gray-700 hover:text-indigo-600 dark:text-gray-200 dark:hover:text-cyan-400"
             >
-              {link.name}
+              Login
             </Link>
-          ))}
-        </div>
-
-        {/* Mobile Toggle */}
-        <div className="md:hidden">
-          <button onClick={() => setIsOpen(!isOpen)} className="text-gray-800 dark:text-white">
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          ) : (
+            <Link to="/profile">
+              <img
+                src={`http://localhost:5000${user.profileImageUrl}`}
+                alt="profile"
+                className="w-10 h-10 rounded-full object-cover hover:ring-2 ring-indigo-400"
+              />
+            </Link>
+          )}
         </div>
       </div>
-
-      {/* Mobile Nav */}
-      {isOpen && (
-        <div className="md:hidden px-4 pb-4 space-y-2 bg-white dark:bg-gray-900">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              className="block text-gray-700 hover:text-blue-500 dark:text-gray-200 dark:hover:text-cyan-400"
-              onClick={() => setIsOpen(false)}
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
-      )}
     </nav>
   );
 };
